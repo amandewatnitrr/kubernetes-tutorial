@@ -11,7 +11,7 @@
   - Container
   - Orchestration
 
-<img align="right" width="10%" height="10%" src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/k8s.png">
+<img align="right" width="10%" height="10%" src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/k8s.svg">
 
 - Kubernetes is just a container orchestration technology. There are multiple such technologies available today. Docker has it's own tool called Docker Swarm, Kubernetes from Google and MESOS from Apache. While Docker swarm is really easy to setup and get started, it lacks some of the advanced features required for complex applications. MESOS on the other hand si quite difficult to setup and get started but supports many advanced features.
 - Kubernetes arguably the most popular of all , is a bit difficult to setup and get started but provides a lot of options to customize deployments and supports deployment of complex architectures.
