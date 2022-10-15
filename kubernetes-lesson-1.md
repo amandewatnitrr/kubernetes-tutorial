@@ -34,7 +34,7 @@
 
 - Now, we have the cluster but who is responsible for managing the cluster. Where is the information about members of cluster stored? How are the nodes monitored? When a node fails how do you move the workload of the field node to another worker node?
 - That's where the master comes in.
-- The Master is another node with Kubernetes installed on it and is configured as master. The master watches over the nodes in the cluster andd is responsible for actual orchestration of containers on the worker nodes.
+- The `Master` is another node with Kubernetes installed on it and is configured as master. The master watches over the nodes in the cluster andd is responsible for actual orchestration of containers on the worker nodes.
 
 ## Components
 
@@ -42,32 +42,34 @@
   - API Server
   - ETCD Service
   - Kubelet service
-  - Container Runtime 
+  - Container Runtime
   - Controllers
   - Schedulers
-- API Server: The API Server acts as the Front-end of Kubernetes Service. The Users, Management Devices, CLI all talk to the API Server to interact with Kubernetes Cluster.
-- ETCD Key-Value Store: ETCD is a distributed reliable key-value store used by Kubernetes to store all data used to manage the cluster.
-- Think of this way when we have multiple nodes and multiple masters in our cluster, ETCD stores all that information on all the nodes in the cluster in a distributed manner. 
-- It is responsible for implementing blocks within the cluster to ensure that there are no conflict b/w masters.
+  
+- API Server: 
+  - The API Server acts as the Front-end of Kubernetes Service. 
+  - The Users, Management Devices, CLI all talk to the API Server to interact with Kubernetes Cluster.
+  
+- ETCD Key-Value Store:
+  - ETCD is a distributed reliable key-value store used by Kubernetes to store all data used to manage the cluster.
+  - Think of this way when we have multiple nodes and multiple masters in our cluster, ETCD stores all that information on all the nodes in the cluster in a distributed manner.
+  - It is responsible for implementing blocks within the cluster to ensure that there are no conflict b/w masters.
 
-## Scheduler
+- Scheduler:
+  - The Scheduler is responsible for distributing work or containers across multiple nodes.
+  - It looks for newly created containers and assigns them to nodes.
 
-- The Scheduler is responsible for distributing work or containers across multiple nodes.
-- It looks for newly created containers and assigns them to nodes.
+- Controllers:
+  - Controllers are the brain behind the orchestration
+  - Responsible for noticing and responding when nodes, endpoints or containers goes down. They make the decisions to bring up new containers in such cases.
 
-## Controllers
+- Container Runtime:
+  - Container Runtime is the underlying software that is used to run containers. 
+  - In our cases this happens to be docker let's suppose it for now as there are other options as well.
 
-- Controllers are the brain behind the orchestration
-- Responsible for noticing and responding when nodes, endpoints or containers goes down. They make the decisions to bring up new containers in such cases.
-
-## Container Runtime
-
-- Container Runtime is the underlying software that is used to run containers. In our cases this happens to be docker let's suppose it for now as there are other options as well.
-
-## Kubelet
-
-- Kubelet is the agent that runs on each node in the cluster.
-- The agent is responsible for making sure that containers are running on the nodes as expected.
+- Kubelet
+  - Kubelet is the agent that runs on each node in the cluster.
+  - The agent is responsible for making sure that containers are running on the nodes as expected.
 
 </strong>
 </p>
