@@ -22,7 +22,7 @@
 
 # Kubernetes Architecture
 
-![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/full-stack-development.gif)
+<img style="display: block;  margin-left: auto;  margin-right: auto; width: 50%;" src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/full-stack-development.gif"></img>
 
 ## Node
 
