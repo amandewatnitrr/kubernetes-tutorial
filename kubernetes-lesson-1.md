@@ -22,6 +22,8 @@
 
 # Kubernetes Architecture
 
+![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/full-stack-development.gif)
+
 ## Node
 
 - A `Node` is a machine, physical or virtual on which Kubernetes is installed. A node is a worker machine and that is where container will be launched by Kubernetes.
@@ -49,7 +51,7 @@
 - API Server: 
   - The API Server acts as the Front-end of Kubernetes Service. 
   - The Users, Management Devices, CLI all talk to the API Server to interact with Kubernetes Cluster.
-  
+
 - ETCD Key-Value Store:
   - ETCD is a distributed reliable key-value store used by Kubernetes to store all data used to manage the cluster.
   - Think of this way when we have multiple nodes and multiple masters in our cluster, ETCD stores all that information on all the nodes in the cluster in a distributed manner.
