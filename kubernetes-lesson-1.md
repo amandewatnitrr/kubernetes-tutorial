@@ -125,5 +125,9 @@
 - For Windows, we can use VirtualBox or Hyper-V and for Linux, VirtualBox or KVM.
 - And finally to interact with Kubernetes , you must have the KubeCtl Kubernetes command Line Tool also installed on your machine.
 
+# Kubernetes Concept
+
+![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Kubernetes3.jpg)
+
 </strong>
 </p>
