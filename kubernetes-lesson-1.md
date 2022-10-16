@@ -73,5 +73,46 @@
   - Kubelet is the agent that runs on each node in the cluster.
   - The agent is responsible for making sure that containers are running on the nodes as expected.
 
+<hr>
+
+## Master vs Worker Nodes
+
+- So, far we have seen 2 types of Servers:
+  - Master
+  - Worker
+  - Set of Components
+- They all together make Kubernetes.
+- But how are these components distributed across different types of server?? In other words, how a server becomes master and the other become slave?
+- The `Worker` Node or `Minion` as it is also known is where the containers are hosted.
+- The `Worker` nodes have `Container Runtime`.
+- For example, docker containers are needed to run docker container on a system, we need container runtime installed and that's where container runtime falls. In this case it happens to be docker. This doesn't have to be docker only. There are other container runtime alternatives available such as Rocket or Cryo. For this complete tutorial guide, we will suppose docker as our Container Runtime.
+- The `Master` Server has the `KubeAPI Server` and that is what makes it a master.
+- Similarly, the `Worker` nodes have the `Kubelet Agent` that is responsible for interacting with a master, to provide health information of the worker node and carry out action requested by Master on the worker nodes.
+- All the information gathered are stored in a `key-value store` on the `master`. It is based on most popular ETCD Framework.
+- The `Master` also has the `Scheduler` and the `Controller`.
+
+## KubeCtl
+
+- In parallel, let's not forget about one of the command line utilities Known as `Kube Command Line Tool` or `KubeCtl` or `Kube Control` as it is also called.
+- The `KubeCtl` tool is used to deploy and manage applications on a Kubernetes Cluster.
+- To get Cluster Information, to get status of other nodes in the cluster and to manage many other things.
+- The `kubectl run` command is used to deploy an application on the cluster.
+- The `kubectl cluster-info` command is used to view information about the cluster.
+- The `kubectl get nodes` command is used to get list of all the nodes that are part of the cluster.
+
+# Setting up Kubernetes
+
+- There are multiple ways to setup Kubernetes. We can set it up ourselves locally on our laptops or virtual machines using solutions like :
+  - minikube
+  - microK8s
+  - Kudeadm.
+- The KubeAdmin tool is used to bootstrap and manage production grade kubernetes clusters.
+
+- There are also hosted solutions available for Setting Up Kubernetes in cloud environment such as:
+  - <img src="https://img.shields.io/badge/Google_Cloud-326CE5?style=plastic&logo=googlecloud&logoColor=white">
+  - <img src="https://img.shields.io/badge/Amazon_Web_Service-232F3E?style=plastic&logo=googlecloud&logoColor=white">
+  - <img src="https://img.shields.io/badge/Microsoft_Azure-0078D4?style=plastic&logo=MicrosoftAzure&logoColor=white">
+  - <img src="https://img.shields.io/badge/IBM_Cloud-1261FE?style=plastic&logo=IBMCloud&logoColor=white">
+
 </strong>
 </p>
