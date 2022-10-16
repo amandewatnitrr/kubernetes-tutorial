@@ -114,5 +114,16 @@
   - <img src="https://img.shields.io/badge/Microsoft_Azure-0078D4?style=plastic&logo=MicrosoftAzure&logoColor=white">
   - <img src="https://img.shields.io/badge/IBM_Cloud-1261FE?style=plastic&logo=IBMCloud&logoColor=white">
 
+## MiniKube
+
+- Earlier we talked about different components of Kubernetes that make up master and worker node, such as the API Server, Key-Value Store, Controllers, Scheduler on the `Master` and the Container Runtime, KubeCtl Agent or Kubelet Service on the `Worker Node/Minion`.
+- It takes a lot of time and effort to setup and install all of these various components systems individually by ourselves.
+- MiniKube Bundles all of these different component into single image, providing us a pre-configured single node, kubernetes cluster, so we can get started in a matter of minutes.
+- The Whole bundle is packaged into an ISO image and is available online for download.
+- MiniKube provides an executable command line utility that automatically download the ISO and deploy it in a virtualization platform such as <img src="https://img.shields.io/badge/Oracle-F80000?style=plastic&logo=Oracle&logoColor=white">, <img src="https://img.shields.io/badge/Virtual_Box-183A61?style=plastic&logo=VirtualBox&logoColor=white"> and <img src="https://img.shields.io/badge/vmware-607078?style=plastic&logo=VMware&logoColor=white">.
+- So, you must have a hypervisor installed on your system.
+- For Windows, we can use VirtualBox or Hyper-V and for Linux, VirtualBox or KVM.
+- And finally to interact with Kubernetes , you must have the KubeCtl Kubernetes command Line Tool also installed on your machine.
+
 </strong>
 </p>
