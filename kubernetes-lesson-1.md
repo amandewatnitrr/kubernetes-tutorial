@@ -129,5 +129,32 @@
 
 ![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Kubernetes3.jpg)
 
+- Before we head into understanding PODs, we expect you to have some basic concepts of:
+  - Docker
+  - Kubernetes Theory
+- We are assuming that the following has already been setup. 
+  - We assume that the application is already daeveloped and built into Docker Image and is avaialable on a Docker Repository like Docker Hub, so that kubernetes can pull it down.
+  - We also assume that the Kubernetes Cluster has already been setup and is working. 
+  - This could be a single-node or multi-node setup doesn't matter.
+  - All the services need to be in running state.
+
+## PODs
+
+- As we discussed before with Kubernetes, Our ultimate aim is to deploy our application in the form of containers on a set of machines that are configured as worker nodes in cluster.
+- However, Kubernetes does not deploy containers directly on the Worker Nodes.
+- The Containers are encapsulated into Kubernetes Objects called `PODs`.
+- A POD is a single instance of an application.
+- A POD is the smallest Object you can create in Kubernetes.
+
+<img align="right" width="50%" height="50%" src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/nodes.gif">
+
+- Let's assume a simple case where we have a single node, Kubernetes Cluster with a single instance of our application running in a single docker container encapsulated in a POD. What if the number of users accessing my application increase and we need to scale our application, we need to add additional instances of our web application to share the load.
+  - Now, where would we spin up additional instance?? 
+  - Do we bring up new container instance within same POD?? Now, we createw new POD all together with a new instance of the same application. As we can see now we have 2 instances of our web application running on seprate PODs on the same Kubernetes System or Node.
+  - What if the use base further increases more and our current node has no sufficient capaciyy ? Well, than we can always deploy additional PODs on a new node in the cluster. We will have a new node added to the cluster to extend the cluster's physical capacity.
+  - So, the conclusion we get from the above example we discussed is that, `PODs` usually have a `1-to-1 relationship with containers` running our application. To scale up we create new `PODs` and to scale down you delete existing `PODs`. We donot add addditional containers to an exsisting POD to scale up our application.
+
+![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/pod2.png)
+
 </strong>
 </p>
