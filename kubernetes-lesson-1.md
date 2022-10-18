@@ -48,8 +48,8 @@
   - Controllers
   - Schedulers
   
-- API Server: 
-  - The API Server acts as the Front-end of Kubernetes Service. 
+- API Server:
+  - The API Server acts as the Front-end of Kubernetes Service.
   - The Users, Management Devices, CLI all talk to the API Server to interact with Kubernetes Cluster.
 
 - ETCD Key-Value Store:
@@ -66,7 +66,7 @@
   - Responsible for noticing and responding when nodes, endpoints or containers goes down. They make the decisions to bring up new containers in such cases.
 
 - Container Runtime:
-  - Container Runtime is the underlying software that is used to run containers. 
+  - Container Runtime is the underlying software that is used to run containers.
   - In our cases this happens to be docker let's suppose it for now as there are other options as well.
 
 - Kubelet
@@ -132,9 +132,9 @@
 - Before we head into understanding PODs, we expect you to have some basic concepts of:
   - Docker
   - Kubernetes Theory
-- We are assuming that the following has already been setup. 
+- We are assuming that the following has already been setup.
   - We assume that the application is already daeveloped and built into Docker Image and is avaialable on a Docker Repository like Docker Hub, so that kubernetes can pull it down.
-  - We also assume that the Kubernetes Cluster has already been setup and is working. 
+  - We also assume that the Kubernetes Cluster has already been setup and is working.
   - This could be a single-node or multi-node setup doesn't matter.
   - All the services need to be in running state.
 
@@ -145,16 +145,48 @@
 - The Containers are encapsulated into Kubernetes Objects called `PODs`.
 - A POD is a single instance of an application.
 - A POD is the smallest Object you can create in Kubernetes.
+- Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
 
 <img align="right" width="50%" height="50%" src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/nodes.gif">
 
 - Let's assume a simple case where we have a single node, Kubernetes Cluster with a single instance of our application running in a single docker container encapsulated in a POD. What if the number of users accessing my application increase and we need to scale our application, we need to add additional instances of our web application to share the load.
-  - Now, where would we spin up additional instance?? 
-  - Do we bring up new container instance within same POD?? Now, we createw new POD all together with a new instance of the same application. As we can see now we have 2 instances of our web application running on seprate PODs on the same Kubernetes System or Node.
+  - Now, where would we spin up additional instance??
+  - Do we bring up new container instance within same POD?? Now, we create new POD all together with a new instance of the same application. As we can see now we have 2 instances of our web application running on seperate PODs on the same Kubernetes System or Node.
   - What if the use base further increases more and our current node has no sufficient capaciyy ? Well, than we can always deploy additional PODs on a new node in the cluster. We will have a new node added to the cluster to extend the cluster's physical capacity.
-  - So, the conclusion we get from the above example we discussed is that, `PODs` usually have a `1-to-1 relationship with containers` running our application. To scale up we create new `PODs` and to scale down you delete existing `PODs`. We donot add addditional containers to an exsisting POD to scale up our application.
+  - So, the conclusion we get from the above example we discussed is that, `PODs` usually have a `1-to-1 relationship with containers` running our application. To scale up we create new `PODs` and to scale down you delete existing `PODs`. We do not add additional containers to an existing POD to scale up our application.
 
 ![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/pod2.png)
+
+### Multi-Container PODs
+
+- We just mentioned that PODs usually have 1-to-1 relationship with the containers. But are we restricted to have single container in a single POD?
+  - No, A single POD can have multiple containers except for the fact that they are not usually multiple containers of the same kind. But sometimes we may have a scenario where we have a helper container that might be doing some kind of supporting task for our web application, such as processing a user, entering data, processing a file uploaded byt the user etc, and you want these helper containers to live alongside our application container. In that case we can have both the containers part of the same POD, so that when a new application container is created, the helper is also created, and when it dies the helper also dies, since they are part of the same POD.
+  - The 2 containers can also communicate with each other directly by referring to each other as local hosts since they share the same network space. They can also share the same storage space as well.
+
+# `kubectl`
+
+## `kubectl run name --image=image_name`
+
+- Earlier we learned about the `kubectl run name --image=image_name` command.
+  - What this command really does is deploys a Docker container fo specified image by creating a POD.
+  - It first creates a POD and automatically deploys an instance of the specified docker image. Assume this to be nginx for now.
+- But where does it get the application image form?
+  - For that we need to specify the image name using `--image` option as shown in given example:
+    - `kubectl run nginx --image=nginx`
+  - In the example, above the image is downloaded form the docker hub repository.
+
+## `kubectl get pods`
+
+- The command help us see the list of PODs in the cluster.
+- `-o wide` parameter additional information in a minimalistic way.
+
+## `kubectl describe pod POD_NAME`
+
+- This command provides a lot of information  as compared to the get command.
+- This command shows some major details like POD_NAME, LABELS, START_TIME, POD_IP_ADDRESS and node assigned to along with the IP Address of the node.
+- It also displays information related to the container, Image and Container_ID.
+- At the bottom we can see the additional information called events, here we can see the list of events that occurred since the POD was created. A POD goes through multiple stages before it starts.
+- The POD is assigned a node. If there are multiple nodes , we would see which node the port was assigned to.
 
 </strong>
 </p>
