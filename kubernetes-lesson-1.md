@@ -188,5 +188,89 @@
 - At the bottom we can see the additional information called events, here we can see the list of events that occurred since the POD was created. A POD goes through multiple stages before it starts.
 - The POD is assigned a node. If there are multiple nodes , we would see which node the port was assigned to.
 
+## POD with YAML
+
+- Kubernetes uses YAML files as input for the creation of objects such as PODs, Replicas, Deployment Services, etc. All of these follow similar structure.
+- Kubernetes definition file always contain 4 top level fields.
+  - `apiVersion`
+  - `kind`
+  - `metadta`
+  - `spec`
+- These are the top-level or root level properties. These are also required fields, so we must have them in our configuration  file.
+- Let's have a look at each of the top-level fields one by one.
+
+  - `apiVersion`
+
+    - This is the version of the Kubernetes API, we are using to create objects.
+    - Depending on what we are trying to create we must use the right `apiVersion`.
+    - For now as we are working on PODs we will set the `apiVersion` as `v1`.
+    - Some other possible values for `apiVersion` are:
+      - For PODs: v1
+      - For Service: v1
+      - ReplicaSet: apps/v1
+      - Deployment: apps/v1
+
+  - `kind`
+
+    - The kind refers to the type of object we are trying to create.
+    - For our case, the kind is Pod.
+    - Some other possible values for this `kind` are:
+      - Pod
+      - ReplicaSet
+      - deployment
+      - service
+
+  - `metadata`
+
+    - The `metadata` is the data about the object like it's name, label etc.
+    - As we can see unlike the first two where we have specified string value, this is in the form of a dictionary.
+    - Under `metadata`, `name` is a string value.
+    - The `labels` in metadata is a dictionary and it can have any key-value pair as we wish.
+    - For example let's assume, there are 100s of PODs running a front-end application and 100s of PODs running a back-end application or a database. It will be difficult for us to group these parts once they are deployed. If we label them now as frontend, backend and database, we will be able to filter parts based on this label at a later point on time.
+    - It's important to note that under `metadata` we can only specify names or labels or anything else that kubernetes expects to be under metadata. We cannot add any other property as we wish under this.
+    - However under labels we can have we can have nay kind of key-vealu pairs as we see fit. So, it's important to understand what each of these parameters expect.
+    - Example:
+
+      ```YAML
+        appVersion: v1
+        kind: Pod
+
+        metadata:
+          name: my-app-pod
+          labels: 
+            app: myapp
+            type: frontend
+
+        spec:
+      ```
+  
+  -`spec`
+  
+    - But til now we haven't specified any container or Image name which we need in the POD.
+    - The last section in the file is the specification section known as `spec`.
+    - Depending on the object we are going to create. This is where we would provide additional information to Kubernetes pertaining to that object.
+    - This going to be different for different objects so it's important to understand or refer to the documentation to get the right format for each.
+    - In our example, since we are creating a POD with single container in it, it is easy. Spec is a dictionary. So, add a property in it called containers.  `containers` here is a list or an array. The reason this property is a list is because the PODs can have multiple containers within them.
+
+    - Example:
+
+        ```YAML
+          appVersion: v1
+          kind: Pod
+
+          metadata:
+            name: my-app-pod
+            labels: 
+              app: myapp
+              type: frontend
+
+          spec:
+            containers:
+              - name: nginx-container
+                image: nginx
+        ```
+
+- Once the file is created, run the command `kubectl create -f filename.yaml` and kubernetes creates the POD.
+
 </strong>
 </p>
