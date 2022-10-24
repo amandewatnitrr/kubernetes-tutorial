@@ -188,6 +188,10 @@
 - At the bottom we can see the additional information called events, here we can see the list of events that occurred since the POD was created. A POD goes through multiple stages before it starts.
 - The POD is assigned a node. If there are multiple nodes , we would see which node the port was assigned to.
 
+## `kubectl delete pod POD_NAME`
+
+- This command deletes the existing POD with the specified name.
+
 ## POD with YAML
 
 - Kubernetes uses YAML files as input for the creation of objects such as PODs, Replicas, Deployment Services, etc. All of these follow similar structure.
@@ -270,7 +274,7 @@
                 image: nginx
         ```
 
-- Once the file is created, run the command `kubectl create -f filename.yaml` and kubernetes creates the POD.
+- Once the file is created, run the command `kubectl create -f filename.yaml` and kubernetes creates the POD. `create` and `apply` can be used synonmously. 
 
 </strong>
 </p>
