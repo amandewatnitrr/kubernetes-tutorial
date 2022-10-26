@@ -127,5 +127,19 @@
 
 ![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Kubernetes8.png)
 
+- So, sometimes this question might be hitting you, why do we label our PODs and Objects in Kubernetes??
+- Let's understand this with a simple scenario.
+  - Say we deployed three instances of our frontend web application as 3 PODs. We would like to create a replication controller or replica set to ensure that we have three active PODs at any time. This is one of the use case of replica sets. We can use it to monitor existing PODs if we have them already created as we consider for this example. In case they were not created, the replica set will create them for us. The role of the replica set is to monitor the parts and if any of them were to fail, deploy new ones. The Replica Set is in fact a process that monitors the PODs. Now, how does the replica set know what PODs to monitor? There could be hundres of other PODs in the cluster running different applications. This is where labeling our PODs during creation comes in handy. We could now provide these labels as a filter for replica set. Under the selector section we use the match labels filter and provide the same label that we used while creating the PODs. This way the replica set knows which PODs to monitor.
+  - Sam concept of Labels and Selectors is used in many places throughout the Kubernetes.
+
+## Scaling the Replica Set
+
+- Let's say we started with 3 Replicas and in future after sometime we decide to scale it to 6. How do we update our ReplicaSet to scale to 6 replicas. Well there are multiple ways to do it. The first way to do it is update the number of replicas in the definition file to 6. Than run the `kubectl replace -f replicaset-definition.yml` command and this will update the replica set to have 6 replicas.
+- The second way to do it is run the `kubectl scale --replicas=6 -f replicaset-definition.yml` command and this will update the replica set to have 6 replicas. We can either input the definition file or provide replica set in type name format as follows: `kubectl scale --replicas=6 [type] [name]`. However, using file name is less preferred as it will not result in number of replicas updated automatically in the file. In other words, the number of replicas in replica set definition file will still be 3. Even though you scaled your replica set to have 6 replicas using the `kubectl scale --replicas=6 -f replicaset myapp-replicaset` command.
+- There are also options available to automatically scale the replica set based on load as well which we will discuss in some other lesson further.
+
+- If in case we want to delete an existing ReplicaSet, use the command `kubectl delete [type] [name]` command.
+
+
 </strong>
 </p>
