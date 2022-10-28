@@ -50,6 +50,8 @@
 
 # Kubernetes Networking
 
+<img width="30%" height="30%" align="left" src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Kubernetes_Cluster_in_Minutes-1.png">
+
 - We will start with a single node Kubernetes Cluster. The node has an IP Address. Say it is one 192.160.8.1.2. in this case, this is the IP address we use to access the Kubernetes node, SSh into it etc..
 - On a side note remember if we are using a minikube setup , then we are talking about the IP Address of the miniKube Virtual Machine inside your hypervisor.
 - So, on the single node Kubernetes Cluster, we have created a single POD. As you know, a POD hosts a container, unlike in the Docker World where an IP address is always assigned to a docker container. In Kubernetes World IP Address is assigned to a POD. Each POD in the Kubernetes gets it's own internal IP Addresses. In our case, assume it to be in the range 10.244 series and the IP assigned to the POD is 10.244.0.2. So how its it getting this IP address??
