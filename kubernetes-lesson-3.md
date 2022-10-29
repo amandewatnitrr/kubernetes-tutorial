@@ -5,6 +5,8 @@
 
 <img src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/tumblr_85b9b86937506df32e63831251a8fab5_2532cbc5_1280.gif">
 
+<br>
+
 - For now let us forget about PODs and Replica Sets and other Kubernetes Concept and discuss about how you might want to deploy  your application  in a production environment.
 - Say, for example we have a web server that needs to be deployed in a production environment. We need not one but many such instances of the web server running for obvious reasons.
 - Secondly, whenever newer versions of application builds become available on the docker registry , we would like to upgrade our docker instances seamlessly.
