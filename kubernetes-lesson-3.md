@@ -74,6 +74,12 @@
   - <img src="https://img.shields.io/badge/cilium-F8C517?style=plastic&logo=cilium&logoColor=white">
   - <img src="https://img.shields.io/badge/NZXT-000000?style=plastic&logo=NZXT&logoColor=white">
   - <img src="https://img.shields.io/badge/vmware-607078?style=plastic&logo=vmware&logoColor=white">
+  - etc...
+
+- This depends on the platform we deploying the our Kubernetes Cluster on. We may use one of these solutions 
+- For example, if we were setting up a Kubernetes Cluster from scratch on our own system, we may use any of the solutions like calcio or flannel etc. If we were deploying on a vmware environment, NSXT may be a good option.
+
+- So, back to our cluster with custom networking either flannel or calico setup. It now manages the networks and IPs in my notes and assigns a different network address for each network in the node. This creates a virtual network of all PODs and nodes where they are all assigned a unique IP Address and by using simple routing techniques, the cluster networking enables communication between the different PODs or nodes to meet the networking requirements of Kubernetes. Thus all the PODs now can communicate to each other using the assigned IP Address.
 
 
 </strong>
