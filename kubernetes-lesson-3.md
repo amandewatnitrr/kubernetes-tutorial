@@ -171,7 +171,7 @@ _ Let's take a look at one use case of services. So far e talked about how PODs 
 
     spec:
      containers:
-      - name: ngix-container
+      - name: nginx-container
         image: nginx
      
   ```
