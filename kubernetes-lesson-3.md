@@ -101,19 +101,6 @@ _ Let's take a look at one use case of services. So far e talked about how PODs 
 - One of it's use case is to listen to a port on the node and forward requests on that port to a port on the POD running the web application. This type of service is known as a NodePort Service because the service listens to a port on the node and forward requests to the POD.
 - It makes an internal port accessible on a port on the node.
 - We said that a service can help us by mapping a port on the node to a port on the port.
-
-## Services - Cluster IP
-
-- The Service creates a virtual IP inside the cluster to enable communication b/w different services such as a set of frontend servers to a set of backend servers.
-
-## Services - Load Balancer
-
-- It provisions a load balancer for our application in supported cloud providers.
-- A good example for that would be to distribute load across the different web servers in your frontend tier.
-
-<hr>
-
-- We said that service can help us by mappung a port on  the node to a port on the port.
 - Let's take a closer look at the service. If you look at it, there are three ports involved.
 - The port on the port where the actual web server is running is 80(Target Port). And it is referred to as the target port, because that is where the services forwards. The request to the second port is the port on the service itself. It is simply referred to as the port. Remember, these terms are from the viewpoint of the service. The service is infact like a virtual server inside the node, inside the cluster, it has it's own IP Address, and that IP Address is called the Cluster IP of Service. And finally, we have the port on the node itself, which we use to access the web server externally, and that is known as the NodePort. As you can see, it is set to 30008. That is because the node ports can be in a valid range, which default is from 30000 to 32767.
 
@@ -156,6 +143,64 @@ _ Let's take a look at one use case of services. So far e talked about how PODs 
 
 - When PODs are distributed across multiple nodes. We have the web application on PODs on separate nodes in the cluster. When we create a service without having to do any additional configuration, Kubernetes automatically creates a service that spans across all the nodes in the cluster and maps the target port to the same port on all the nodes in the cluster. This way we aca access the application using IP of any node in the cluster and using the same port number which in this case is 30008.
 - Using the IP of any of these nodes we try to curl the same port and the same port is made available on all the nodes POD of the cluster.
+
+## Services - ClusterIP
+
+![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Services3.png)
+
+- The Service creates a virtual IP inside the cluster to enable communication b/w different services such as a set of frontend servers to a set of backend servers.
+- A Full Stack web application typically has different kinds of PODs hosting different parts of an application.
+- You may have a set of PODs running a frontend web server, another set of parts running a backend web server, a set of PODs running a Key Value store like Redis and another set of PODs maybe running a persistent database like MySQL.
+- The Web Frontend servers need to communicate to the backend servers and the backend servers need to communicate to the database as well as the redis services etc.
+- So what is the right way to establish connectivity b/w these services or tiers of my application? 
+- The PODs all have an IP Address assigned to them as we can see on the screen, but these IPs as we know are not static. These PODs can go down anytime and new PODs are created all the time. And so you cannot rely on these IP Addresses for internal communication b/w these application. Also, what if the first front end POD at 10.244.0.3 need to communicate to a backend service? Which of the three would it go to and who would make the this decision? A Kubernetes Service can help us group the PODs together and provide a single interface to access the PODs in the group.
+- For example, a service created for backend PODs  will help group all the backend PODs together and provide a single interface for other PODs to access the service. The requests are forwarded to one of the PODs under the service randomly. Similarly, create additional services for Redis and allow the backend PODs to access the redis systems through the service. This enables us to easily and effectively deploy micro-services based application on Kubernetes Cluster. Each layer can now scale or move as required without impacting communication b/w various services.
+- Each service gets an IP and name assigned to it inside the cluster and that is the name that should be used by other PODs to access the service. This type of service is known as `ClusterIP`.
+- To create such a service as always use a definition file.
+- In service-definition file, first we use the default template that we have as usual having `apiVersion`, `kind`, `metadata` and `spec`. The `apiVersion` is `v1`, `kind` is `service` and we will give a name to our service, we will name it `back-end`. Under `spec` we have `type` and `ports`. The type is `ClusterIP`.The `ClusterIP` is the default Service type in case it's not defined. So, even if we don't specify it, it will automatically assume  the type to be `ClusterIP`. Under `port` we have a `targetPort` and `port`. The `targetPort` is the port where the backend is exposed, which in this case is 80 and the port is where the service is exposed, which is 80 as well. To link the service to a set of ports we use selector. We will refer to the POD definition file and copy the labels from it and paste it onto our `selector` section and that should be it. We can now create the service using the `kubectl create -f service.definition.yml`. We can now create a ClusterIP address. The service can be accessed by other parts using the ClusterIP or the service name 
+
+- pod-definition.yml
+  
+  ```YAML
+    apiVersion: v1
+    kind: pod
+
+    metadata:
+     name: myapp-pod
+     labels: 
+
+    spec:
+     containers:
+      - name: ngix-container
+        image: nginx
+     
+  ```
+
+- service-definition.yml
+  
+  ```YAML
+    apiVersion: v1
+    kind: Service
+    metadata:
+     name: back-end
+    spec:
+     type: ClusterIP
+     ports:
+      - targetPort: 80
+        port: 80
+
+     selector:
+      app: myapp
+      type: backend
+
+  ```
+
+## Services - Load Balancer
+
+- It provisions a load balancer for our application in supported cloud providers.
+- A good example for that would be to distribute load across the different web servers in your frontend tier.
+
+<hr>
 
 
 </strong>
