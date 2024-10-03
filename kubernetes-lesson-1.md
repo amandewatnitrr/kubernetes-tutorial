@@ -24,6 +24,60 @@
 
 <img align="center" style="display: block;  margin-left: auto;  margin-right: auto;" src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/full-stack-development.gif"></img>
 
+```mermaid
+graph TD
+    subgraph Master_Node["Master Node"]
+        APIServer["API Server"] 
+        Scheduler["Scheduler"] 
+        ControllerManager["Controller Manager"] 
+        etcd["etcd"]
+    end
+
+    subgraph Worker_Node_1["Worker Node"]
+        kubelet1["kubelet"] 
+        kubeproxy1["kube-proxy"] 
+        pod1["Pod 1"]
+        pod2["Pod 2"]
+    end
+    
+    subgraph Worker_Node_2["Worker Node"]
+        kubelet2["kubelet"] 
+        kubeproxy2["kube-proxy"] 
+        pod3["Pod 3"]
+        pod4["Pod 4"]
+    end
+
+    subgraph Worker_Node_3["Worker Node"]
+        kubelet3["kubelet"] 
+        kubeproxy3["kube-proxy"] 
+        pod5["Pod 5"]
+        pod6["Pod 6"]
+    end
+
+    %% Connections
+    APIServer --> Scheduler
+    APIServer --> ControllerManager
+    APIServer --> etcd
+
+    APIServer --> kubelet1
+    APIServer --> kubelet2
+    APIServer --> kubelet3
+
+    kubelet1 --> pod1
+    kubelet1 --> pod2
+    kubelet2 --> pod3
+    kubelet2 --> pod4
+    kubelet3 --> pod5
+    kubelet3 --> pod6
+
+    kubeproxy1 --> pod1
+    kubeproxy1 --> pod2
+    kubeproxy2 --> pod3
+    kubeproxy2 --> pod4
+    kubeproxy3 --> pod5
+    kubeproxy3 --> pod6
+```
+
 ## Node
 
 - A `Node` is a machine, physical or virtual on which Kubernetes is installed. A node is a worker machine and that is where container will be launched by Kubernetes.
