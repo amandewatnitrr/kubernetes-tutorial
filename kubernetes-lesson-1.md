@@ -224,7 +224,7 @@ graph TD
   - What if the use base further increases more and our current node has no sufficient capaciyy ? Well, than we can always deploy additional PODs on a new node in the cluster. We will have a new node added to the cluster to extend the cluster's physical capacity.
   - So, the conclusion we get from the above example we discussed is that, `PODs` usually have a `1-to-1 relationship with containers` running our application. To scale up we create new `PODs` and to scale down you delete existing `PODs`. We do not add additional containers to an existing POD to scale up our application.
 
-![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/pod2.png)
+  ![](./imgs/pod2.png)
 
 ### Multi-Container PODs
 
