@@ -424,20 +424,20 @@
 
   - Example:
 
-        ```YAML
-          appVersion: v1
-          kind: Pod
+    ```yaml    
+    appVersion: v1
+    kind: Pod
 
-          metadata:
-            name: my-app-pod
-            labels: 
-              app: myapp
-              type: frontend
+    metadata:
+      name: my-app-pod
+      labels: 
+        app: myapp
+        type: frontend
 
-          spec:
-            containers:
-              - name: nginx-container
-                image: nginx
-        ```
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+    ```
 
-- Once the file is created, run the command `kubectl create -f filename.yaml` and kubernetes creates the POD. `create` and `apply` can be used synonmously. 
+- Once the file is created, run the command `kubectl create -f filename.yaml` and kubernetes creates the POD. `create` and `apply` can be used synonmously.
