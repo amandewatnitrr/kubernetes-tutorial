@@ -1,6 +1,6 @@
 # Deployments - <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=Kubernetes&logoColor=white">
 
-<img src="https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/tumblr_85b9b86937506df32e63831251a8fab5_2532cbc5_1280.gif">
+![](./imgs/tumblr_85b9b86937506df32e63831251a8fab5_2532cbc5_1280.gif)
 
 <br>
 
@@ -207,7 +207,7 @@
 
 - The port on the port where the actual web server is running is 80(Target Port). And it is referred to as the target port, because that is where the services forwards. The request to the second port is the port on the service itself. It is simply referred to as the port. Remember, these terms are from the viewpoint of the service. The service is infact like a virtual server inside the node, inside the cluster, it has it's own IP Address, and that IP Address is called the Cluster IP of Service. And finally, we have the port on the node itself, which we use to access the web server externally, and that is known as the NodePort. As you can see, it is set to 30008. That is because the node ports can be in a valid range, which default is from 30000 to 32767.
 
-![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Services.png)
+  ![](./imgs/Services.png)
 
 - Let's now look at how to create the service, just like how we created a deployment replica set or POD in the past. We will use a definition file to create a service. The high level structure of the file remains the same as before. The `spec` as always is the defining part of the file that differes b/w different objects. Here in the `spec` section of service we have `type` and `ports`. The `type` refers to the type of service we are creating. As discussed before it can be ClusterIP, NodePort or LoadBalancer.
 
@@ -322,7 +322,7 @@
 
 ## Services - Load Balancer
 
-![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Services4.png)
+  ![](./imgs/Services4.png)
 
 - It provisions a load balancer for our application in supported cloud providers.
 
