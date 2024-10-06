@@ -24,7 +24,7 @@
 
 - Throughout this tutorial guide we discussed about PODs which deploy single instances of our application such as the web application in this case. Each container is encapsulated in PODs. Multiple such PODs are deployed using replication controllers or replica set and then comes deployment which is a Kubernetes Object that comes higher in the hierarchy, the deployment provides us with the capability to upgrade ht e underlying instances seamlessly using rolling updates, undo changes and pause and resume changes as required.
 
-## Creating Deployment
+### Creating Deployment
 
   ```YAML
    apiVersion: apps/v1
@@ -57,6 +57,24 @@
 - The `template` has a POD definition inside it. Once the file is ready run the `kubectl create -f deployment-definition.yml` command. Then run the `kubectl get deployment` command to see newly created deployment. The deployment automatically creates a replica set. If we run the `kubectl get replicaset` command we will be able to see a new replica set in the name of deployment. The Replica Set ultimately creates PODs. So, if we run the `kubectl get pods` command , we will be able to see POD name with the name of deployment and the replica set.
 
 - So far there hasn't been much of a difference b/w replica set and the deployments except for the fact that deployment created a new Kubernetes object called deployments.
+
+>[!WARNING]
+>Database can't be replicated using Deplyment, cause they are not stateless, and actually has a state, meaning if we have clones or replicas of database, they will all have to access the same Data Storage.<br/><br/>
+> And, hence would require a mechanism that manages which PODs are currently writing to that storage or which PODs are reading from the storage, to avoid data inconsistencies.
+
+  And here comes another Kubernetes Object called `StatefulSet` which is used to manage stateful applications like databases.
+
+## StatefulSets
+
+- Just like `Deployments` are used to manage stateless applications, `StatefulSets` are used to manage stateful applications.
+
+- It is used to manage stateful applications like databases, where each POD has a unique identity and persistent storage.
+
+- The PODs in a StatefulSet are created in a sequential order and each POD has a unique identity.
+
+- The Updates to the PODs in a StatefulSet are carried out in a sequential order so as to avoid redundancy, and maintain data consistency.
+
+- But, it is a fact that deploying a StatefulSet is more complex than deploying a Deployment. That's why it's common practice to setup databases outside of the Kubernetes Cluster, and only deploy the scalable parts of the application inside the Kubernetes Cluster.
 
 # Kubernetes Networking
 
@@ -354,3 +372,41 @@
   ```
 
 <hr>
+
+## Volumes
+
+- Volumes are used to store data in a persistent manner in Kubernetes.
+
+- The data stored in a volume is preserved across POD restarts. If the volume does not exist, the data is lost when the POD is deleted or, if the POD goes down even if it is restarted.
+
+- There are different types of volumes available in Kubernetes. Some of them are:
+
+  - `emptyDir`
+  - `hostPath`
+  - `nfs`
+  - `persistentVolumeClaim`
+  - `configMap`
+  - `secret`
+
+- So, once we have a volume, we can attach it to a POD. The volume is mounted to a directory in the container. The data stored in the volume is available to the container.
+
+  Even if the container goes down, the data is still available in the volume. The volume is not deleted when the container is deleted. The volume is deleted only when the POD is deleted.
+
+- Example of Volume:
+
+  ```YAML
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: myapp-pod
+  spec:
+    containers:
+    - name: myapp-container
+      image: myapp-image:latest
+      volumeMounts:
+        - name: myapp-volume
+          mountPath: /var/www/html
+    volumes:
+    - name: myapp-volume
+      emptyDir: {}
+  ```

@@ -110,25 +110,32 @@
 
 - When we install kubernetes on a system, we are actually installing a number of components such as an
 
-  - API Server
-  - ETCD Service
-  - Kubelet service
-  - Virtual Network
-  - Container Runtime
-  - Controllers
-  - Schedulers
+  - `API Server`
+  - `ETCD Service`
+  - `Kubelet service`
+  - `Virtual Network`
+  - `Container Runtime`
+  - `Controllers`
+  - `Schedulers`
   
 - API Server:
 
   - The API Server acts as the Front-end of Kubernetes Service.
 
-  - It is the entry point into the Kubernetes Cluster.
+  - It is the entry point into the Kubernetes Cluster. It's like a Cluster Gateway.
 
   - The Users, Management Devices, CLI all talk to the API Server to interact with Kubernetes Cluster.
+
+  - It also acts a GateKeeper for authentication and authorization.
 
 - ETCD Key-Value Store:
 
   - ETCD is a distributed reliable key-value store used by Kubernetes to store all data used to manage the cluster.
+
+  - It is also called the `Brain` of Kubernetes. Every change in the cluster is stored in ETCD. The Scheduler, Controller Manager, API Server all read and write data from ETCD.
+
+  - >[!NOTE]
+    >Application data is not stored in `etcd`, it's stored somewhere else.
 
   - Think of this way when we have multiple nodes and multiple masters in our cluster, ETCD stores all that information on all the nodes in the cluster in a distributed manner.
 
@@ -136,7 +143,7 @@
 
 - Scheduler:
 
-  - The Scheduler is responsible for distributing work or containers across multiple nodes.
+  - The Scheduler is responsible for distributing work among containers across multiple nodes.
 
   - It looks for newly created containers and assigns them to nodes.
 
@@ -161,6 +168,12 @@
   - Kubelet is the agent that runs on each node in the cluster.
 
   - The agent is responsible for making sure that containers are running on the nodes as expected.
+
+  - The Kubelet schedules containers, and pods, and reports the containers health to the master node.
+
+  - Kubelet interacts with both the container and the node, cause at the end of the day it is responsible for taking that configuration and making sure that the pod are running as expected, and the resources are assigned to the pod as requested.
+
+  - The Services acts like a communicator & load balancer that actually catches the request and forwards it to the right pod. 
 
 <hr>
 
@@ -219,6 +232,8 @@
   - <img src="https://img.shields.io/badge/Amazon_Web_Service-232F3E?style=plastic&logo=googlecloud&logoColor=white">
   - <img src="https://img.shields.io/badge/Microsoft_Azure-0078D4?style=plastic&logo=MicrosoftAzure&logoColor=white">
   - <img src="https://img.shields.io/badge/IBM_Cloud-1261FE?style=plastic&logo=IBMCloud&logoColor=white">
+
+
 
 ## MiniKube
 
