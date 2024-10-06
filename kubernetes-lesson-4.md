@@ -1,6 +1,3 @@
-<p align="justify">
-<strong>
-
 # Microservices Application - <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=Kubernetes&logoColor=white">
 
   ![](./imgs/micro2.png)
@@ -352,5 +349,3 @@
     tls.key: base64 encoded key
   type: kubernetes.io/tls
   ```
-
-</p>
