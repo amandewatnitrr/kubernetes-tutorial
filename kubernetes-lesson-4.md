@@ -32,7 +32,7 @@
 ## What is Ingress ??
 
 >[!IMPORTANT]
->Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+>Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.<br/><br/>Ingress provides a single point of entry into the cluster making it easier to manage applications and troubleshoot routing issues.
 
 - It makes your HTTP (or HTTPS) network service available using a protocol-aware configuration mechanism, that understands web concepts like URIs, hostnames, paths, and more. The Ingress concept lets you map traffic to different backends based on rules you define via the Kubernetes API.
 
@@ -60,6 +60,12 @@
 - An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
 
 - An Ingress does not expose arbitrary ports or protocols.
+
+- We can install an Ingress on minikube using the following command:
+
+  ```bash
+  minikube addons enable ingress
+  ```
 
 - Exposing services other than HTTP and HTTPS to the internet typically uses a service of type `Service.Type=NodePort` or `Service.Type=LoadBalancer`.
 
@@ -330,7 +336,7 @@
 
 ### TLS
 
-- You can secure an Ingress by specifying a Secret that contains a TLS private key and certificate. 
+- You can secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
 
 - The Ingress resource only supports a single TLS port, 443, and assumes TLS termination at the ingress point (traffic to the Service and its Pods is in plaintext).
 
@@ -349,3 +355,77 @@
     tls.key: base64 encoded key
   type: kubernetes.io/tls
   ```
+
+## Example of Ingress Implementation
+
+- This is a implementation done after studying through `kubernetes-lesson-5.md`, so please go through that before proceeding with this.
+
+- So first start off by running the following command to enable the Ingress Controller on minikube:
+
+  ```bash
+  minikube addons enable ingress
+  ```
+
+  This will enable the Ingress Controller on minikube.
+
+- Now let's create an Ingress resource to expose the services to the external world.
+
+  `dashboard-ingress.yaml`
+
+  ```yaml
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: dashboard-ingress
+    namespace: kubernetes-dashboard
+  spec:
+    rules:
+    - host: dashboard.com
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: kubernetes-dashboard
+              port:
+                number: 443
+  ```
+
+  This Ingress resource will expose the `kubernetes-dashboard` service to the external world. The Ingress resource will route the traffic to the `kubernetes-dashboard` service on port 443.
+
+- Now let's create the Ingress resource using the following command:
+
+  ```bash
+  kubectl apply -f dashboard-ingress.yaml
+  ```
+
+  And, on investigating you will see output like this:
+
+  ```bash
+  > kubectl get ingress -n kubernetes-dashboard
+  NAME                CLASS    HOSTS           ADDRESS   PORTS   AGE
+  dashboard-ingress   <none>   dashboard.com             80      2m
+  ```
+
+  Assigning the IP address will take some time. So, you can check the status of the Ingress resource using the following command:
+
+  ```bash
+  > kubeclt get ingress -n kubernetes-dashboard --watch
+  ```
+
+  Once the IP address is assigned, you can access the `kubernetes-dashboard` service using the IP address assigned to the Ingress resource.
+
+  Go to `/etc/hosts` file and add the following entry:
+
+  ```bash
+  sudo nano /etc/hosts
+  ```
+
+  Add the following entry:
+
+  ```bash
+  <IP_ADDRESS> dashboard.com
+  ```
+
+  Now, you can access the `kubernetes-dashboard` service using the URL `https://dashboard.com`. You might need to execute one more command `minikube tunnel` to access the service in some cases.
