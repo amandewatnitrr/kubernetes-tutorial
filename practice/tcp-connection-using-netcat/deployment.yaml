@@ -1,0 +1,59 @@
+# This section contains the deployment configuration for the netcat server.
+
+# The netcat server listens on port 5000 and is configured to use 128Mi of memory and 500m of CPU.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netcat-server
+spec:
+  selector:
+    matchLabels:
+      app: netcat-server
+    template:
+      metadata:
+        labels:
+          app: netcat-server
+      spec:
+        containers:
+        - name: netcat-server
+          image: subfuzion/netcat
+          command:
+          - sh
+          args:
+          - -c
+          - "nc -l 5000"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+            ports:
+            - containerPort: 5000
+---
+# This section contains the deployment configuration for the netcat client.
+
+# The netcat server listens on port 5000 and is configured to use 128Mi of memory and 500m of CPU.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netcat-client
+spec:
+  selector:
+    matchLabels:
+      app: netcat-client
+    template:
+      metadata:
+        labels:
+          app: netcat-client
+      spec:
+        containers:
+        - name: netcat-client
+          image: subfuzion/netcat
+          command:
+          - sh
+          args:
+          - -c
+          - "while true; do sleep 3600; done"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

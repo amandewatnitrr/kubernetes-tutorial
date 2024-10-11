@@ -1,0 +1,12 @@
+# Create a service to expose the netcat-server deployment
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: netcat-server
+spec:
+  selector:
+    app: netcat-server
+  ports:
+  - port: 5000
+    targetPort: 5000
