@@ -41,7 +41,7 @@
 
 - Imagine you have an application made up of multiple microservices, and I am deploying all of them in my k8s cluster, and deployment and services of each of those microservices are pretty much the same with only difference that the application name and the version name are different or docker image name and version tags are different.
 
-  So, without helm you will write seprate yaml files, configuration files for each of those microservices, so you would have multiple deployment service files, where each has it's own application name and verison defined.
+  So, without helm you will write separate yaml files, configuration files for each of those microservices, so you would have multiple deployment service files, where each has it's own application name and version defined.
 
   Using Helm, what we can do is we can define a common blueprint for all those services, the values that are dynamic or are going to be changed replaced by placeholders. And, that would be a template file.
 
@@ -85,3 +85,110 @@
   Cause there in the build files, we can replace the values in those template yaml files on the fly and deploy them in the cluster.
 
 - Another, use case for Helm comes into picture when we deploy the same application across different environments from k8s cluster.
+  
+- So, consider that you have a microservice application that we want to deploy on development, staging and production clusters.
+
+- So, instead of deploying individual `YAML` files separately in each cluster, we can package them up to make our own application chart that will have all the necessary `yaml` files that particular deployment needs, and than we can use them to redeploy the same application in different k8s cluster environments using 1 command, which will also make the whole deployment process easier.
+  
+  ```bash
+  >> ls -a
+  >> values.yaml    Chart.yaml    charts/    templates/
+  ```
+
+- So, this is how the folder structure of a chart generally looks like:
+  
+- Top level is the name of the chart or the Chart Folder.
+
+- `Chart.yaml` is the file that contains all the meta information about the chart could be name, version, dependencies etc...
+
+- `values.yaml` is the place where all the values are configured for the template files, and these are the default values that we can override later.
+
+- `chart/` folder have the chart dependencies inside meaning that if this chart depends on other charts then those chart dependencies will be stored here.
+
+- `templates/` folder is basically where the template files are stored.
+
+- So, when we execute `helm install <chartname>` command to actually install those yaml files into k8s, the template files from here will be filled with the values from `values.yaml` producing valid k8s manifest that can than be deployed into k8s.
+  
+- Another feature of Helm is release management, which is provided based on it's setup.
+  
+- But it's important to note here the difference b/w Helm Version 2 vs 3.
+  
+  - In Version 2 of Helm, the installation comes in 2 parts. We have the `helm client` and `helm server`. The Server part is called `tiller`.
+
+  - So, whenever we deploy helm chart using `helm install <chart-name>`.
+
+    >[!NOTE]
+    >Helm client will send the yaml files to tiller that actually runs in a kubernetes cluster. And tiller than executes these request and create components from these yaml files inside the k8s cluster.<br/><br/>And exactly, this architecture offers additional valuable features of Helm which is `release management`.
+
+
+    ```mermaid
+    sequenceDiagram
+    participant User as User
+    participant HelmClient as Helm Client
+    participant Tiller as Helm Server (Tiller)
+    participant K8sCluster as Kubernetes Cluster
+
+    User->>HelmClient: Runs Helm commands (e.g., helm install)
+    HelmClient->>HelmClient: Packages Charts and Dependencies
+    HelmClient->>Tiller: Sends request (chart and config)
+    Tiller->>K8sCluster: Interacts with Kubernetes API to deploy resources
+    K8sCluster->>Tiller: Returns deployment status
+    Tiller->>HelmClient: Sends deployment status/results
+    HelmClient->>User: Displays output and status
+    ```
+
+    - The way Helm Client-Server setup works is that whenever you create or change deployment `tiller` will store a copy of each configuration client send for future reference, thus creating a history of chart executions.
+
+      So, when you execute `helm upgrade <chart-name>` the changes will be applied to existing deployment, instead of removing the existing and creating a new one.
+
+      In case, if any upgrade goes wrong or fails we can rollback the update using the command:
+
+      ```bash
+      helm rollback <chart-name>
+      ```
+
+      All, this is possible because of the Chart Execution History that tiller keeps whenever we send those requests from Helm Client to tiller.
+
+- **Downside of Helm Server(Tiller)**
+  
+  Tiller has too much power inside a k8s cluster. It can perform `CRUD` operations on the components, and has too much permissions, and this makes it a big security threat. And, this is the reason why in Helm 3, tiller was removed and was made just a simple helm binary.
+
+### How values are injected into YAML files
+
+- Consider that in `values.yaml` which is default value configuration we have following 3 values, the `imageName`, `port` and `version`.
+  
+  ```yaml
+  imageName: myapp
+  port: 8080
+  version: 1.0.0
+  ```
+  
+  So, the default value mentioned here can be overwritten in couple of different ways.
+  
+  - One way is when executing `helm install` command specify the alternate `values-1.yaml` files as follows using `--values` flag:
+
+  `values-1.yaml`
+
+  ```yaml
+  version: 0.9.7
+  ```
+
+  ```bash
+  helm install --values=values-1.yaml <chartname>
+  ```
+
+  This will produce a new `.Values` object that would look something like this:
+
+  ```yaml
+  imageName: myapp
+  port: 8080
+  version: 0.9.7
+  ```
+
+ So, it would have `imageName` and `port` from `values.yaml` and the one we overrode from `values-1.yaml` file.
+
+- Alternatively, we can also provide additional individual values using `--set` flag where we can define values directly on the command line. But, it's more organized and better manageable to have file `values.yaml` files where we store all those values.
+  
+  ```bash
+  helm install --set version=2.0.0
+  ```

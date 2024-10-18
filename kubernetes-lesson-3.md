@@ -266,7 +266,7 @@
 
   - So, far we talked about a service mapped to a single POD, but that's not the case all the time. What do you do when you have multiple PODS ? In a production environment you have multiple instances of your application running for high availability and load balancing purposes. In this case we have multiple similar PODs running our web application. They all have the same labels with a key app and set to value of myapp. The same label is used as selector during the creation of the service. So, when the service is created, it looks for a matching POD with the label and finds `n` of them. The Service than automatically selects all the n PODs as endpoints to forward the external request coming from the user. We don't have to make any additional configuration to make this happen. And if you are wondering what algorithm it uses to balance the load across 3 different PODs, it uses a random algorithm. Thus the service acts as a Built in load balancer to distribute load across different PODs.
 
-![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Services2.png)
+![](./imgs/Services2.png)
 
 - When PODs are distributed across multiple nodes. We have the web application on PODs on separate nodes in the cluster. When we create a service without having to do any additional configuration, Kubernetes automatically creates a service that spans across all the nodes in the cluster and maps the target port to the same port on all the nodes in the cluster. This way we aca access the application using IP of any node in the cluster and using the same port number which in this case is 30008.
 
@@ -277,7 +277,7 @@
 
 ## Services - ClusterIP
 
-![](https://github.com/amandewatnitrr/kubernetes-tutorial/blob/master/imgs/Services3.png)
+![](./imgs/Services3.png)
 
 >[!IMPORTANT]
 >The Service creates a virtual IP inside the cluster to enable communication b/w different services such as a set of frontend servers to a set of backend servers.
@@ -375,9 +375,71 @@
 
 ## Volumes
 
-- Volumes are used to store data in a persistent manner in Kubernetes.
+>[!SUCCESS]
+>Volumes are used to store data in a persistent manner in Kubernetes. They are used to make sure the data is available and stored safely even after the pod has restarted or the cluster has crashed.
+  
+### How to persist data using Volumes??
+
+#### What's the need??
+
+- Consider a case, where we have a MySQL Database, which the application uses. The Data gets added, updated in the database, but when we restart the POD all the changes we did are gone. Because, k8s doesn't give you data persistence out of the box, that something we have to explicitly configure as a developer or user for each application, that needs saving data when pod restarts.
+
+  So, basically we need a storage that doesn't depend on POD lifecycle, so it will still be there when pod dies and new ones get created, so it can pick up where the last POD left off.
 
 - The data stored in a volume is preserved across POD restarts. If the volume does not exist, the data is lost when the POD is deleted or, if the POD goes down even if it is restarted.
+
+  So, it will read the existing data from the storage to get up to date data. However we are unaware of the fact, on which node the pod restarts. So, our storage must be accessible from all the nodes, not just a specific one. So, when the new POD tries to read the existing data, the up-to-data is available on all the nodes in the cluster.
+
+  Also, the storages must be capable of surviving even if the cluster crashes, to ensure high availability.
+  
+  Another, use case for Persistent Storage is Directories. Maybe you have an application that writes and reads files from pre-configured directory this could be session files for application or configuration files.
+  
+  We can do any of these type of storage using k8s component called `PersistentVolume`.
+  
+  ![](./imgs/persistent-volume-and-persistent-volume-claim.png)
+  
+  >[!IMPORTANT]
+  >`PersistentVolume` is a cluster resource that is used to store data. Just like any other k8s component, it is created using a YAML file, where we can specify the `kind` and different parameters that we need to configure like `capacity`-> `storage`, `volumeMode`, `accessModes`, `persistentVolumeReclaimPolicy`, `storageClassName`, `mountOptions` etc...
+  
+   But, since `PersistentVomue` is just an abstract component, it must take the storage from a actual physical storage like Local Hard Disk or Cluster Nodes, external NFS Server, maybe Cloud Storage etc...
+
+   So, the question is where does this external storage come from, and who makes it available on the cluster?? Who configures it?? It doesn't care about your storage. It gives you persistent volume component interface to let actual storage you as an actual  that we as a maintainer or an administrator have to take care of. So, you have to decide what type of storage do we need?? And how we manage them??
+
+   So, think of Storage in Kubernetes as a external plugin to your cluster, whether it's a local storage on an actual node where the cluster is running or remote storage, they are all plugins to the cluster.
+
+   ![](./imgs/Persistent-Volume.svg)
+
+   And, you can have multiple storages configured to your cluster where one application in your cluster uses local disk storage and another one uses the NFS Server., and another one uses some cloud storage or one application may use multiple of those storage types. And, By Creating Persistent Volumes we can use this actual physical storages. In the `spec`, we can define which storage backend we want to use to create that storage abstraction or storage resource for the applications.
+
+  >[!NOTE]
+  >Persistent Volumes are not namespaced, meaning they are accessible by whole cluster, and unlike other components that we saw like PODs and services, PVs are not in any namespace.
+
+  ![](./imgs/persistent-volume-namespace.svg)
+
+- The other thing that needs proper categorisation is Local and Remote Volumes, as each have it's own use case, otherwise they won't exist and we will see some of this use cases later in the video.
+
+  Local Volume types violate 2nd and 3rd requirement of Data Persistence. for databases that I mentioned at the begining, which is:
+
+  - Not being tied to a specific node, but rather to each node equally, because you don't know where the new pod will start.
+  - Surviving Cluster Crashes Scenario
+
+  And that's why it's always preferred to use remote storage.
+  
+#### Who creates these PVs and when??
+
+>[!IMPORTANT]
+>PVs are basically nothing but resources that already need to be there in the cluster before the POD, that depends on it is created.
+
+  - There are 2 main roles in k8s:
+	  - Administrator
+	  - User
+	
+  - The Administrator sets up the cluster and maintains it, and also makes sure the cluster has enough resources. These are mainly System Engineers and DevOps Engineers within a org.
+
+  - The Users deploy applications inside this cluster either directly or through CI/CD Pipeline.
+
+
+### Implementation
 
 - There are different types of volumes available in Kubernetes. Some of them are:
 

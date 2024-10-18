@@ -1,1 +1,9 @@
-{}
+{
+  "cssTheme": "Tokyo Night",
+  "interfaceFontFamily": "Hack Nerd Font,Cascadia Code",
+  "textFontFamily": "Cascadia Code",
+  "monospaceFontFamily": "Hack Nerd Font,Cascadia Code",
+  "accentColor": "",
+  "theme": "obsidian",
+  "baseFontSize": 15
+}
