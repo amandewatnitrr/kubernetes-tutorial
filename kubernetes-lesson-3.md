@@ -272,7 +272,6 @@
 
 - Using the IP of any of these nodes we try to curl the same port and the same port is made available on all the nodes POD of the cluster.
 
-
 <hr/>
 
 ## Services - ClusterIP
@@ -506,10 +505,9 @@
 
   - Now the containers, or the application inside the containers can read and write to that storage.
 
-  - And, when the POD dies, it will have access to the same storage, and will see all the updates and changes made by previous PODs and containers in the storage.
+  - And, when the POD dies, it will have access to the same storage, and will see all the updates and changes made by previous PODs and containers in the storage.<br/><br/>
 
-  ![](./imgs/Persistent-Volume-claim-mechanism.svg)
-
+    ![](./imgs/Persistent-Volume-claim-mechanism.svg)
 
 ### Implementation
 
