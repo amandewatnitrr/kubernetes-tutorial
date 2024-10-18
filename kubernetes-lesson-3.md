@@ -375,7 +375,7 @@
 
 ## Volumes
 
->[!SUCCESS]
+>[!NOTE]
 >Volumes are used to store data in a persistent manner in Kubernetes. They are used to make sure the data is available and stored safely even after the pod has restarted or the cluster has crashed.
   
 ### How to persist data using Volumes??
@@ -430,13 +430,85 @@
 >[!IMPORTANT]
 >PVs are basically nothing but resources that already need to be there in the cluster before the POD, that depends on it is created.
 
-  - There are 2 main roles in k8s:
-	  - Administrator
-	  - User
-	
-  - The Administrator sets up the cluster and maintains it, and also makes sure the cluster has enough resources. These are mainly System Engineers and DevOps Engineers within a org.
+- There are 2 main roles in k8s:
+  - Administrator
+  - User
 
-  - The Users deploy applications inside this cluster either directly or through CI/CD Pipeline.
+- The Administrator sets up the cluster and maintains it, and also makes sure the cluster has enough resources. These are mainly System Engineers and DevOps Engineers within a org.
+
+- The Users deploy applications inside this cluster either directly or through CI/CD Pipeline.
+  
+- The k8s Admin will the one to actually configure the storage meaning that he/she will make sure that the NFS Server is properly managed and configured, and Create PV Components from these storage backends.
+
+### Persistent Volume Claim Component (PVC)
+
+>[!IMPORTANT]
+>Every application deployed inside the cluster need to claim the PV, and that is done using PVCs.
+
+- PVCs are also created with YAML configurations, as shown below:
+  
+  ```bash
+  kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: my-pvc
+  spec:
+    storageClassName: manual
+    volumeMode: Filesystem
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+  ```
+
+  - So, how it works is PVC claims a Volume with certain storage size, which is defiend in the YAML file, and some additional characteristics like `accessModes` and `storageClassName` etc..
+
+  Whatever persistet volume matches this criteria, satisfies this claim is used for the application.
+
+  >[!WARNING]
+  >Also, we need to use the PVCs in the PODs configuration. You can see the example below to know how:
+
+  ```bash
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: my-pod
+  spec:
+    containers:
+      - name: my-container
+        image: my-image
+        volumeMounts:
+          - mountPath: "/path/in/container"
+            name: my-volume
+    volumes:
+      - name: my-volume
+        persistentVolumeClaim:
+          claimName: my-pvc
+  ```
+
+  You can see that clearly in the PODs specification we have the `volumne` attribute, that references the PVC. So, the POD and all the containers inside the POD will have access to that PV Storage.
+
+  #### Level of Volume Abstractions
+
+  - PODs accesses the storage using PVC as a Volume.
+
+  - The Claim than tries to find a PV in the Cluster that satisfies the claim. And, the Volume will have a actual storage backend that it will create that storage resource from.
+
+  - This way POD will now be able to use that actual storage packet.
+
+    >[!NOTE]
+    >PVC must exist in the same namespace as the POD that uses it. Cause PVs are not namespaced.
+
+  - So, once the POD finds the matching PV through the PVC, the volume is than mounted onto the POD. Than that Volume can be mounted onto the container inside the POD.
+
+  - We can decide to mount this Volume in all the containers or just some of those.
+
+  - Now the containers, or the application inside the containers can read and write to that storage.
+
+  - And, when the POD dies, it will have access to the same storage, and will see all the updates and changes made by previous PODs and containers in the storage.
+
+  ![](./imgs/Persistent-Volume-claim-mechanism.svg)
 
 
 ### Implementation

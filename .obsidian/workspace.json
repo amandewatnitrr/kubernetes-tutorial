@@ -156,17 +156,9 @@
                 "file": "kubernetes-lesson-3.md"
               }
             }
-          },
-          {
-            "id": "4b12339ddce1782f",
-            "type": "leaf",
-            "state": {
-              "type": "git-view",
-              "state": {}
-            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -186,7 +178,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "f53081c06cce4082",
+  "active": "ed994fd911e532a6",
   "lastOpenFiles": [
     "imgs/persistent-volume-namespace.svg",
     "kubernetes-lesson-3.md",
