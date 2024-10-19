@@ -145,73 +145,6 @@
 
 <hr/>
 
-### ConfigMap
-
->[!IMPORTANT]
->ConfigMap is a Kubernetes Object that stores configuration data in key-value pairs.
-
-- It is nothing but external configuration data that can be consumed by the application.
-- It mainly contains configurations like DB_URL, API_URL, environment variables etc.
-
-- Example of ConfigMap Implementation:
-
-  `ConfigMap.yml`
-
-  ```YAML
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: my-app-config
-    data:
-      DB_URL: "mysql://db-host:3306/my_database"
-      DB_USERNAME: "db_user"
-      DB_PASSWORD: "supersecretpassword"
-  ```
-
-  `pod.yaml`
-
-  ```yml
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    name: my-app-pod
-  spec:
-    containers:
-      - name: my-app-container
-        image: my-app-image:latest
-        env:
-          - name: DB_URL
-            valueFrom:
-              configMapKeyRef:
-                name: my-app-config
-                key: DB_URL
-          - name: DB_USERNAME
-            valueFrom:
-              configMapKeyRef:
-                name: my-app-config
-                key: DB_USERNAME
-          - name: DB_PASSWORD
-            valueFrom:
-              configMapKeyRef:
-                name: my-app-config
-                key: DB_PASSWORD
-  ```
-
-  But, as shown above it is not recommended to use ConfigMap for sensitive data like passwords, API keys etc. For that we have `Secrets`.
-
-### Secrets
-
->[!IMPORTANT]
->Secrets is a Kubernetes Object that stores sensitive data like passwords, API keys etc.
-
-- It is similar to ConfigMap but is used to store sensitive data.
-- The data here is not stored in plain text but is base64 encoded.
-
->[!CAUTION]
->The Built-in security mechanism is not enabled by default. It is recommended to enable it before using Secrets.
-
-<hr/>
-
 ### Services - NodePort
 
 >[!IMPORTANT]
@@ -488,7 +421,7 @@
 
   You can see that clearly in the PODs specification we have the `volumne` attribute, that references the PVC. So, the POD and all the containers inside the POD will have access to that PV Storage.
 
-  #### Level of Volume Abstractions
+  ### Level of Volume Abstractions
 
   - PODs accesses the storage using PVC as a Volume.
 
@@ -509,7 +442,9 @@
 
     ![](./imgs/Persistent-Volume-claim-mechanism.svg)
 
-### Implementation
+  #### Why So Many Abstractions??
+
+  - The main reason behind this is to make sure the User of the k8s cluster doesn't have to worry about the actual storage backend, and the Admin doesn't have to worry about the applications that are using the storage.
 
 - There are different types of volumes available in Kubernetes. Some of them are:
 
@@ -520,25 +455,70 @@
   - `configMap`
   - `secret`
 
-- So, once we have a volume, we can attach it to a POD. The volume is mounted to a directory in the container. The data stored in the volume is available to the container.
 
-  Even if the container goes down, the data is still available in the volume. The volume is not deleted when the container is deleted. The volume is deleted only when the POD is deleted.
+### ConfigMap
 
-- Example of Volume:
+>[!IMPORTANT]
+>ConfigMap is a Kubernetes Object that stores configuration data in key-value pairs.
+
+- It is nothing but external configuration data that can be consumed by the application.
+- It mainly contains configurations like DB_URL, API_URL, environment variables etc.
+
+- Example of ConfigMap Implementation:
+
+  `ConfigMap.yml`
 
   ```YAML
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: my-app-config
+    data:
+      DB_URL: "mysql://db-host:3306/my_database"
+      DB_USERNAME: "db_user"
+      DB_PASSWORD: "supersecretpassword"
+  ```
+
+  `pod.yaml`
+
+  ```yml
   apiVersion: v1
   kind: Pod
   metadata:
-    name: myapp-pod
+    name: my-app-pod
   spec:
     containers:
-    - name: myapp-container
-      image: myapp-image:latest
-      volumeMounts:
-        - name: myapp-volume
-          mountPath: /var/www/html
-    volumes:
-    - name: myapp-volume
-      emptyDir: {}
+      - name: my-app-container
+        image: my-app-image:latest
+        env:
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: my-app-config
+                key: DB_URL
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: my-app-config
+                key: DB_USERNAME
+          - name: DB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: my-app-config
+                key: DB_PASSWORD
   ```
+
+  But, as shown above it is not recommended to use ConfigMap for sensitive data like passwords, API keys etc. For that we have `Secrets`.
+
+### Secrets
+
+>[!IMPORTANT]
+>Secrets is a Kubernetes Object that stores sensitive data like passwords, API keys etc.
+
+- It is similar to ConfigMap but is used to store sensitive data.
+- The data here is not stored in plain text but is base64 encoded.
+
+>[!CAUTION]
+>The Built-in security mechanism is not enabled by default. It is recommended to enable it before using Secrets.
+
+<hr/>
